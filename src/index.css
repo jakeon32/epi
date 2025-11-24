@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 추가: 부드러운 스크롤 등 전역 스타일 */
+html {
+  /* scroll-behavior: smooth;  <-- Removed for custom JS smooth scroll */
+}
