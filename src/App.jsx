@@ -138,7 +138,7 @@ const Portfolio = () => {
       {/* Hero Section */}
       <header className="relative h-screen flex flex-col justify-center px-6 md:px-20 pt-20">
         <div className="max-w-4xl z-10">
-          <div className={`text-sm md:text-base mb-6 tracking-widest uppercase opacity-0 animate-fade-in-up`} style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+          <div className={`text-sm md:text-base mb-6 tracking-widest uppercase opacity-0 fade-up`} style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
             <RotatingText
               texts={[
                 "Creative Developer & Designer",
@@ -159,12 +159,12 @@ const Portfolio = () => {
             <div className="flex flex-wrap gap-x-[0.2em] items-baseline" style={{ overflow: 'visible' }}>
               <SplitText text="from" delay={0.5} />
               <span className="inline-block relative" style={{ overflow: 'visible', paddingBottom: '0.1em' }}>
-                <span className="block animate-blind-slide-up font-serif italic bg-black text-white px-3 py-1" style={{ animationDelay: '0.6s', lineHeight: '1.2' }}>silence.</span>
+                <span className="block reveal-slide-up font-serif italic bg-black text-white px-3 py-1" style={{ animationDelay: '0.6s', lineHeight: '1.2' }}>silence.</span>
               </span>
             </div>
           </h1>
 
-          <div className="mt-4 max-w-lg text-gray-600 text-lg md:text-xl leading-relaxed opacity-0 animate-fade-in-up" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
+          <div className="mt-4 max-w-lg text-gray-600 text-lg md:text-xl leading-relaxed opacity-0 fade-up" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
             <RotatingText
               texts={[
                 "복잡함 속에서 본질을 찾습니다.\n사용자에게 고요한 몰입의 경험을 전합니다.",
@@ -350,7 +350,7 @@ const Portfolio = () => {
       {/* Marquee Section */}
       <section className="py-32 overflow-hidden bg-[#f4f3f0]">
         <div className="relative flex whitespace-nowrap overflow-hidden">
-          <div className="animate-marquee flex gap-8 items-center text-8xl md:text-9xl font-bold tracking-tighter opacity-10 uppercase">
+          <div className="marquee-scroll flex gap-8 items-center text-8xl md:text-9xl font-bold tracking-tighter opacity-10 uppercase">
             <span>Interaction</span>
             <span className="font-serif italic font-normal">Development</span>
             <span>Digital</span>
@@ -358,7 +358,7 @@ const Portfolio = () => {
             <span>Interaction</span>
             <span className="font-serif italic font-normal">Development</span>
           </div>
-          <div className="absolute top-0 animate-marquee2 flex gap-8 items-center text-8xl md:text-9xl font-bold tracking-tighter opacity-10 uppercase">
+          <div className="absolute top-0 marquee-scroll-2 flex gap-8 items-center text-8xl md:text-9xl font-bold tracking-tighter opacity-10 uppercase">
             <span>Interaction</span>
             <span className="font-serif italic font-normal">Development</span>
             <span>Digital</span>
@@ -415,63 +415,7 @@ const Portfolio = () => {
       )}
 
       {/* Styles */}
-      <style>{`
-        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&display=swap');
-
-        body {
-          font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-        }
-        .font-serif {
-          font-family: 'Noto Serif KR', 'Times New Roman', serif !important;
-        }
-
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-        }
-
-        @keyframes blind-slide-up {
-          from { transform: translateY(120%); }
-          to { transform: translateY(0); }
-        }
-        .animate-blind-slide-up {
-          animation: blind-slide-up 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-100%); }
-        }
-        @keyframes marquee2 {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(0%); }
-        }
-        .animate-marquee {
-          animation: marquee 25s linear infinite;
-        }
-        .animate-marquee2 {
-          animation: marquee2 25s linear infinite;
-        }
-
-        /* Custom Scrollbar for Modal */
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #e5e5e5;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #1a1a1a;
-          border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #000;
-        }
-      `}</style>
+      {/* Styles removed and moved to index.css */}
     </div>
   );
 };
@@ -630,7 +574,7 @@ const SplitText = ({ text, delay = 0, isScrollTriggered = false }) => {
   return (
     <div ref={domRef} className="overflow-hidden inline-block relative">
       <span
-        className={`block transform translate-y-full ${isVisible ? 'animate-blind-slide-up' : ''}`}
+        className={`block transform translate-y-full ${isVisible ? 'reveal-slide-up' : ''}`}
         style={{ animationDelay: `${delay}s` }}
       >
         {text}
@@ -854,7 +798,10 @@ const MobileMenu = ({ smoothScroll }) => {
     <div className="min-[800px]:hidden">
       <button
         onClick={toggleMenu}
-        className="relative z-50 text-sm font-bold uppercase tracking-widest mix-blend-difference text-white"
+        className={`relative z-50 text-sm font-bold uppercase tracking-widest transition-all duration-300 ${isOpen
+            ? 'bg-black text-white px-4 py-2 rounded-full border border-white/20'
+            : 'mix-blend-difference text-white'
+          }`}
       >
         {isOpen ? 'Close' : 'Menu'}
       </button>

@@ -2,7 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 추가: 부드러운 스크롤 등 전역 스타일 */
-html {
-  /* scroll-behavior: smooth;  <-- Removed for custom JS smooth scroll */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&display=swap');
+
+/* Global Styles */
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+
+.font-serif {
+  font-family: 'Noto Serif KR', 'Times New Roman', serif !important;
+}
+
+/* Animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.8s ease-out forwards;
+}
+
+@keyframes reveal-slide-up {
+  from {
+    transform: translateY(120%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.reveal-slide-up {
+  animation: reveal-slide-up 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee2 {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.marquee-scroll {
+  animation: marquee 25s linear infinite;
+}
+
+.marquee-scroll-2 {
+  animation: marquee2 25s linear infinite;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #e5e5e5;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #000;
 }
