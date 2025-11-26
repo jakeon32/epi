@@ -163,7 +163,7 @@ const Home = () => {
       <header className="relative h-screen flex flex-col justify-center px-6 md:px-20 pt-20">
         <div className="max-w-4xl z-10 relative">
           <div className={`text-sm md:text-base mb-6 tracking-widest uppercase opacity-0 fade-up`} style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
-            <RotatingText
+            <TypewriterText
               texts={[
                 "Creative Developer & Designer",
                 "Crafting Digital Experiences",
@@ -189,7 +189,7 @@ const Home = () => {
           </h1>
 
           <div className="mt-4 max-w-lg text-white text-lg md:text-xl leading-relaxed opacity-0 fade-up" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
-            <RotatingText
+            <TypewriterText
               texts={[
                 "복잡함 속에서 본질을 찾습니다.\n사용자에게 고요한 몰입의 경험을 전합니다.",
                 "Less is more.\n디자인은 보이지 않는 곳에서 완성됩니다.",
@@ -612,6 +612,52 @@ const FadeIn = ({ children }) => {
     >
       {children}
     </div>
+  );
+};
+
+/**
+ * Typewriter Text Component
+ * 한 글자씩 타이핑되는 애니메이션 (히어로 섹션용)
+ */
+const TypewriterText = ({ texts, interval = 5000, className = "" }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+
+  useEffect(() => {
+    const currentText = texts[currentIndex];
+    let charIndex = 0;
+
+    // Typing animation
+    if (isTyping) {
+      setDisplayText('');
+      const typingTimer = setInterval(() => {
+        if (charIndex <= currentText.length) {
+          setDisplayText(currentText.substring(0, charIndex));
+          charIndex++;
+        } else {
+          clearInterval(typingTimer);
+          setIsTyping(false);
+        }
+      }, 50); // 50ms per character
+
+      return () => clearInterval(typingTimer);
+    } else {
+      // Wait before showing next text
+      const waitTimer = setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % texts.length);
+        setIsTyping(true);
+      }, interval - (currentText.length * 50)); // Adjust wait time
+
+      return () => clearTimeout(waitTimer);
+    }
+  }, [currentIndex, isTyping, texts, interval]);
+
+  return (
+    <span className={`inline-block ${className}`}>
+      {displayText}
+      {isTyping && <span className="animate-pulse">|</span>}
+    </span>
   );
 };
 
