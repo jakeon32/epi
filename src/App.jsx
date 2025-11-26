@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowRight, Mail, Instagram, Linkedin, Sparkles, RefreshCw, Loader2, X } from 'lucide-react';
 
 /**
@@ -120,7 +121,12 @@ const Portfolio = () => {
       />
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 w-full px-6 py-6 flex justify-between items-center z-40 mix-blend-difference text-white">
+      <nav
+        className={`fixed top-0 left-0 w-full px-6 py-6 flex justify-between items-center z-40 transition-all duration-300 ease-in-out ${scrollY > 50
+          ? 'bg-white/70 backdrop-blur-md border-b border-gray-200/50 shadow-sm text-black'
+          : 'mix-blend-difference text-white'
+          }`}
+      >
         <div className="text-xl font-bold tracking-tighter">9STUDIO</div>
 
         {/* Desktop Navigation (>= 800px) */}
@@ -132,12 +138,12 @@ const Portfolio = () => {
         </div>
 
         {/* Mobile Navigation Button (< 800px) */}
-        <MobileMenu smoothScroll={smoothScroll} />
+        <MobileMenu smoothScroll={smoothScroll} isScrolled={scrollY > 50} />
       </nav>
 
       {/* Hero Section */}
       <header className="relative h-screen flex flex-col justify-center px-6 md:px-20 pt-20">
-        <div className="max-w-4xl z-10">
+        <div className="max-w-4xl z-10 relative">
           <div className={`text-sm md:text-base mb-6 tracking-widest uppercase opacity-0 fade-up`} style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
             <RotatingText
               texts={[
@@ -164,7 +170,7 @@ const Portfolio = () => {
             </div>
           </h1>
 
-          <div className="mt-4 max-w-lg text-gray-600 text-lg md:text-xl leading-relaxed opacity-0 fade-up" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
+          <div className="mt-4 max-w-lg text-white text-lg md:text-xl leading-relaxed opacity-0 fade-up" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
             <RotatingText
               texts={[
                 "복잡함 속에서 본질을 찾습니다.\n사용자에게 고요한 몰입의 경험을 전합니다.",
@@ -173,23 +179,24 @@ const Portfolio = () => {
                 "디지털 공간에 의미를 더합니다.\n브랜드의 본질을 시각화합니다."
               ]}
               interval={7000}
-              className="whitespace-pre-line"
+              className="whitespace-pre-line text-white"
             />
           </div>
         </div>
 
-        {/* Hero Background Video (Parallax) */}
-        <div className="absolute right-0 top-1/4 w-[60vw] h-[60vh] md:w-[40vw] md:h-[70vh] -z-10 overflow-hidden opacity-80">
+        {/* Hero Background Video (Full Screen) */}
+        <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
           <video
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-full object-cover grayscale contrast-125 transition-transform duration-75 ease-linear"
-            style={{ transform: `translateY(${scrollY * 0.15}px)` }}
+            className="w-full h-full object-cover contrast-125 opacity-25"
           >
             <source src="https://videos.pexels.com/video-files/5091624/5091624-hd_1920_1080_24fps.mp4" type="video/mp4" />
           </video>
+          {/* Overlay for text readability */}
+          <div className="absolute inset-0 bg-black/10"></div>
         </div>
       </header>
 
@@ -784,7 +791,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
 // Mobile Menu Component
 // ----------------------------------------------------------------------
 
-const MobileMenu = ({ smoothScroll }) => {
+const MobileMenu = ({ smoothScroll, isScrolled }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -798,41 +805,50 @@ const MobileMenu = ({ smoothScroll }) => {
     <div className="min-[800px]:hidden">
       <button
         onClick={toggleMenu}
-        className={`relative z-50 text-sm font-bold uppercase tracking-widest transition-all duration-300 ${isOpen
-            ? 'bg-black text-white px-4 py-2 rounded-full border border-white/20'
-            : 'mix-blend-difference text-white'
-          }`}
+        className={`relative z-50 text-sm font-bold uppercase tracking-widest transition-all duration-300 ${isScrolled ? 'text-black' : 'mix-blend-difference text-white'
+          } ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       >
-        {isOpen ? 'Close' : 'Menu'}
+        Menu
       </button>
 
       {/* Fullscreen Overlay */}
-      <div
-        className={`fixed inset-0 bg-[#1a1a1a] z-40 flex flex-col justify-center items-center transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
-          }`}
-      >
-        <div className="flex flex-col gap-8 text-center">
-          {['Home', 'Concept', 'Work', 'Contact'].map((item, index) => {
-            const targetId = item === 'Home' ? 'body' : `#${item.toLowerCase()}`;
-            return (
-              <a
-                key={item}
-                href={targetId}
-                onClick={(e) => handleLinkClick(e, targetId)}
-                className={`text-4xl md:text-5xl font-light text-[#f4f3f0] hover:text-gray-400 transition-all duration-500 transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                  }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                {item}
-              </a>
-            );
-          })}
-        </div>
+      {createPortal(
+        <div
+          className={`fixed inset-0 bg-[#1a1a1a] z-[100] flex flex-col justify-center items-center transition-all duration-500 ease-in-out mix-blend-normal ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+            }`}
+        >
+          {/* Close Button inside Portal */}
+          <button
+            onClick={toggleMenu}
+            className="absolute top-6 right-6 text-sm font-bold uppercase tracking-widest bg-black text-white px-4 py-2 rounded-full border border-white/20"
+          >
+            Close
+          </button>
 
-        <div className="absolute bottom-12 text-xs text-gray-500 uppercase tracking-widest">
-          9STUDIO &copy; 2025
-        </div>
-      </div>
+          <div className="flex flex-col gap-8 text-center">
+            {['Home', 'Concept', 'Work', 'Contact'].map((item, index) => {
+              const targetId = item === 'Home' ? 'body' : `#${item.toLowerCase()}`;
+              return (
+                <a
+                  key={item}
+                  href={targetId}
+                  onClick={(e) => handleLinkClick(e, targetId)}
+                  className={`text-4xl md:text-5xl font-light text-[#f4f3f0] hover:text-gray-400 transition-all duration-500 transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                    }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  {item}
+                </a>
+              );
+            })}
+          </div>
+
+          <div className="absolute bottom-12 text-xs text-gray-500 uppercase tracking-widest">
+            9STUDIO &copy; 2025
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
