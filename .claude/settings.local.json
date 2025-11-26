@@ -9,7 +9,10 @@
       "Bash(git push:*)",
       "Bash(cat:*)",
       "Bash(git log:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

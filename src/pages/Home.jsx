@@ -705,7 +705,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
           {/* Hero Image */}
           <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
             <img
-              src={project.image}
+              src={project.image_url || project.image}
               alt={project.title}
               className="w-full h-full object-cover"
             />
