@@ -3,7 +3,13 @@
     "allow": [
       "Bash(tree:*)",
       "Bash(npm run dev:*)",
-      "Bash(timeout 5 bash:*)"
+      "Bash(timeout 5 bash:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: add project detail modal and enhanced animations\n\n- Add project detail modal with smooth scale/fade animations\n- Implement rotating text animation with horizontal slide effect\n- Add fullscreen mobile menu with overlay\n- Update hero section with full-screen video background\n- Improve responsive design across all sections\n- Fix serif font clipping issues (silence, voice)\n- Slow down animation speeds for smoother transitions\n- Add custom scrollbar styling for modal\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(cat:*)",
+      "Bash(git log:*)",
+      "Bash(git remote set-url:*)"
     ],
     "deny": [],
     "ask": []

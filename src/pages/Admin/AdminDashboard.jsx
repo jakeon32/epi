@@ -1,0 +1,136 @@
+import React, { useEffect, useState } from 'react';
+import { projectService } from '../../services/projectService';
+import { supabase } from '../../lib/supabaseClient';
+import { useNavigate, Link } from 'react-router-dom';
+import { Plus, Edit2, Trash2, LogOut, Loader2 } from 'lucide-react';
+
+const AdminDashboard = () => {
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        checkUser();
+        fetchProjects();
+    }, []);
+
+    const checkUser = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            navigate('/admin');
+        }
+    };
+
+    const fetchProjects = async () => {
+        try {
+            const data = await projectService.getProjects();
+            setProjects(data);
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        navigate('/admin');
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm('Are you sure you want to delete this project?')) {
+            try {
+                await projectService.deleteProject(id);
+                setProjects(projects.filter(p => p.id !== id));
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                alert('Failed to delete project');
+            }
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#f4f3f0]">
+                <Loader2 className="w-8 h-8 animate-spin" />
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-[#f4f3f0] p-8">
+            <div className="max-w-6xl mx-auto">
+                <div className="flex justify-between items-center mb-12">
+                    <h1 className="text-3xl font-light tracking-tight">Project Management</h1>
+                    <div className="flex gap-4">
+                        <Link
+                            to="/admin/projects/new"
+                            className="flex items-center gap-2 bg-black text-white px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Add Project
+                        </Link>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 bg-white text-black border border-gray-200 px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-gray-50 transition-colors"
+                        >
+                            <LogOut className="w-4 h-4" />
+                            Logout
+                        </button>
+                    </div>
+                </div>
+
+                <div className="bg-white shadow-sm rounded-sm overflow-hidden">
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr className="border-b border-gray-100 bg-gray-50">
+                                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500">Image</th>
+                                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500">Title</th>
+                                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500">Category</th>
+                                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500">Year</th>
+                                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {projects.map((project) => (
+                                <tr key={project.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                                    <td className="p-4 w-24">
+                                        <img src={project.image_url} alt={project.title} className="w-16 h-10 object-cover rounded-sm bg-gray-200" />
+                                    </td>
+                                    <td className="p-4 font-medium">{project.title}</td>
+                                    <td className="p-4 text-gray-500">{project.category}</td>
+                                    <td className="p-4 text-gray-500">{project.year}</td>
+                                    <td className="p-4 text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <Link
+                                                to={`/admin/projects/edit/${project.id}`}
+                                                className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                                            >
+                                                <Edit2 className="w-4 h-4" />
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(project.id)}
+                                                className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                            {projects.length === 0 && (
+                                <tr>
+                                    <td colSpan="5" className="p-8 text-center text-gray-400 italic">
+                                        No projects found. Create your first project!
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AdminDashboard;
