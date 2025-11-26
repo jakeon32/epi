@@ -163,7 +163,7 @@ const Home = () => {
       <header className="relative h-screen flex flex-col justify-center px-6 md:px-20 pt-20">
         <div className="max-w-4xl z-10 relative">
           <div className={`text-sm md:text-base mb-6 tracking-widest uppercase opacity-0 fade-up`} style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
-            <RotatingText
+            <TypewriterText
               texts={[
                 "Creative Developer & Designer",
                 "Crafting Digital Experiences",
@@ -189,7 +189,7 @@ const Home = () => {
           </h1>
 
           <div className="mt-4 max-w-lg text-white text-lg md:text-xl leading-relaxed opacity-0 fade-up" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
-            <RotatingText
+            <TypewriterText
               texts={[
                 "복잡함 속에서 본질을 찾습니다.\n사용자에게 고요한 몰입의 경험을 전합니다.",
                 "Less is more.\n디자인은 보이지 않는 곳에서 완성됩니다.",
@@ -616,10 +616,10 @@ const FadeIn = ({ children }) => {
 };
 
 /**
- * Rotating Text Component
- * UI/UX 메시지가 한 글자씩 타이핑되는 애니메이션
+ * Typewriter Text Component
+ * 한 글자씩 타이핑되는 애니메이션 (히어로 섹션용)
  */
-const RotatingText = ({ texts, interval = 5000, className = "" }) => {
+const TypewriterText = ({ texts, interval = 5000, className = "" }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
@@ -657,6 +657,38 @@ const RotatingText = ({ texts, interval = 5000, className = "" }) => {
     <span className={`inline-block ${className}`}>
       {displayText}
       {isTyping && <span className="animate-pulse">|</span>}
+    </span>
+  );
+};
+
+/**
+ * Rotating Text Component
+ * UI/UX 메시지가 지속적으로 변하는 애니메이션 (좌우 슬라이드)
+ */
+const RotatingText = ({ texts, interval = 5000, className = "" }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % texts.length);
+        setIsAnimating(false);
+      }, 800); // Slide out duration
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [texts.length, interval]);
+
+  return (
+    <span
+      className={`inline-block transition-all duration-[800ms] ease-in-out ${isAnimating
+        ? 'opacity-0 -translate-x-4'
+        : 'opacity-100 translate-x-0'
+        } ${className}`}
+    >
+      {texts[currentIndex]}
     </span>
   );
 };
