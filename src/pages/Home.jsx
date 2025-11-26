@@ -852,6 +852,15 @@ const MobileMenu = ({ smoothScroll, isScrolled }) => {
                 </a>
               );
             })}
+
+            <a
+              href="/admin"
+              className={`text-4xl md:text-5xl font-light text-[#f4f3f0] hover:text-gray-400 transition-all duration-500 transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                }`}
+              style={{ transitionDelay: '400ms' }}
+            >
+              Admin
+            </a>
           </div>
 
           <div className="absolute bottom-12 text-xs text-gray-500 uppercase tracking-widest">
