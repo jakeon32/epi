@@ -617,32 +617,46 @@ const FadeIn = ({ children }) => {
 
 /**
  * Rotating Text Component
- * UI/UX 메시지가 지속적으로 변하는 애니메이션 (좌우 슬라이드)
+ * UI/UX 메시지가 한 글자씩 타이핑되는 애니메이션
  */
 const RotatingText = ({ texts, interval = 5000, className = "" }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [displayText, setDisplayText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % texts.length);
-        setIsAnimating(false);
-      }, 800); // Slide out duration
-    }, interval);
+    const currentText = texts[currentIndex];
+    let charIndex = 0;
 
-    return () => clearInterval(timer);
-  }, [texts.length, interval]);
+    // Typing animation
+    if (isTyping) {
+      setDisplayText('');
+      const typingTimer = setInterval(() => {
+        if (charIndex <= currentText.length) {
+          setDisplayText(currentText.substring(0, charIndex));
+          charIndex++;
+        } else {
+          clearInterval(typingTimer);
+          setIsTyping(false);
+        }
+      }, 50); // 50ms per character
+
+      return () => clearInterval(typingTimer);
+    } else {
+      // Wait before showing next text
+      const waitTimer = setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % texts.length);
+        setIsTyping(true);
+      }, interval - (currentText.length * 50)); // Adjust wait time
+
+      return () => clearTimeout(waitTimer);
+    }
+  }, [currentIndex, isTyping, texts, interval]);
 
   return (
-    <span
-      className={`inline-block transition-all duration-[800ms] ease-in-out ${isAnimating
-        ? 'opacity-0 -translate-x-4'
-        : 'opacity-100 translate-x-0'
-        } ${className}`}
-    >
-      {texts[currentIndex]}
+    <span className={`inline-block ${className}`}>
+      {displayText}
+      {isTyping && <span className="animate-pulse">|</span>}
     </span>
   );
 };
