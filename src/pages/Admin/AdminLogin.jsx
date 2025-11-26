@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { supabase } from '../../lib/supabaseClient';
+import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
 const AdminLogin = () => {
@@ -29,9 +32,17 @@ const AdminLogin = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#f4f3f0]">
-            <div className="max-w-md w-full bg-white p-8 shadow-lg rounded-sm">
-                <h1 className="text-2xl font-light mb-6 text-center tracking-widest uppercase">Admin Login</h1>
+        <div className="min-h-screen flex items-center justify-center bg-[#f4f3f0] px-4">
+            <div className="w-full max-w-md bg-white p-8 shadow-sm rounded-sm">
+                <div className="mb-8 flex justify-between items-center">
+                    <h1 className="text-2xl font-light tracking-tight">Admin Login</h1>
+                    <button
+                        onClick={() => navigate('/')}
+                        className="text-xs text-gray-500 hover:text-black transition-colors"
+                    >
+                        ← Back to Site
+                    </button>
+                </div>
 
                 {error && (
                     <div className="bg-red-50 text-red-500 p-3 text-sm mb-4 rounded">

@@ -152,6 +152,7 @@ const Home = () => {
           <a href="#about" onClick={(e) => smoothScroll(e, '#about')} className="hover:opacity-50 transition-opacity">Concept</a>
           <a href="#work" onClick={(e) => smoothScroll(e, '#work')} className="hover:opacity-50 transition-opacity">Work</a>
           <a href="#contact" onClick={(e) => smoothScroll(e, '#contact')} className="hover:opacity-50 transition-opacity">Contact</a>
+          <a href="/admin" className="hover:opacity-50 transition-opacity text-xs border border-current px-3 py-1 rounded-full">Admin</a>
         </div>
 
         {/* Mobile Navigation Button (< 800px) */}
