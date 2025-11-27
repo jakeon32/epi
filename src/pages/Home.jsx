@@ -621,28 +621,30 @@ const FadeIn = ({ children }) => {
  */
 const RotatingText = ({ texts, interval = 5000, className = "" }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % texts.length);
-        setIsAnimating(false);
-      }, 800); // Slide out duration
+      setCurrentIndex((prev) => (prev + 1) % texts.length);
     }, interval);
 
     return () => clearInterval(timer);
   }, [texts.length, interval]);
 
   return (
-    <span
-      className={`inline-block transition-all duration-[800ms] ease-in-out ${isAnimating
-        ? 'opacity-0 -translate-x-4'
-        : 'opacity-100 translate-x-0'
-        } ${className}`}
-    >
-      {texts[currentIndex]}
+    <span className={`inline-grid items-center ${className}`}>
+      {texts.map((text, index) => (
+        <span
+          key={index}
+          className={`col-start-1 row-start-1 transition-all duration-[800ms] ease-in-out ${
+            index === currentIndex
+              ? 'opacity-100 translate-x-0'
+              : 'opacity-0 -translate-x-4 pointer-events-none'
+          }`}
+          aria-hidden={index !== currentIndex}
+        >
+          {text}
+        </span>
+      ))}
     </span>
   );
 };
