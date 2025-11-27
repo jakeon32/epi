@@ -9,7 +9,16 @@
       "Bash(git push:*)",
       "Bash(cat:*)",
       "Bash(git log:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh pr view:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

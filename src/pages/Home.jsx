@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { projectService } from '../services/projectService';
-import { createPortal } from 'react-dom';
 import { ArrowRight, Mail, Instagram, Linkedin, Sparkles, RefreshCw, Loader2, X } from 'lucide-react';
+import {
+  Navigation,
+  TypewriterText,
+  RotatingText,
+  AnimatedWord,
+  ScrollReveal
+} from '../components';
 
 /**
  * Saem.space 스타일의 디자인 컨셉을 적용한 포트폴리오 (Gemini AI Edition)
@@ -138,26 +144,7 @@ const Home = () => {
       />
 
       {/* Navigation */}
-      <nav
-        className={`fixed top-0 left-0 w-full px-6 py-6 flex justify-between items-center z-40 transition-all duration-300 ease-in-out ${scrollY > 50
-          ? 'bg-white/70 backdrop-blur-md border-b border-gray-200/50 shadow-sm text-black'
-          : 'mix-blend-difference text-white'
-          }`}
-      >
-        <div className="text-xl font-bold tracking-tighter">9STUDIO</div>
-
-        {/* Desktop Navigation (>= 800px) */}
-        <div className="hidden min-[800px]:flex gap-8 text-sm font-medium tracking-wide">
-          <a href="#" onClick={(e) => smoothScroll(e, 'body')} className="hover:opacity-50 transition-opacity">Home</a>
-          <a href="#about" onClick={(e) => smoothScroll(e, '#about')} className="hover:opacity-50 transition-opacity">Concept</a>
-          <a href="#work" onClick={(e) => smoothScroll(e, '#work')} className="hover:opacity-50 transition-opacity">Work</a>
-          <a href="#contact" onClick={(e) => smoothScroll(e, '#contact')} className="hover:opacity-50 transition-opacity">Contact</a>
-          <a href="/admin" className="hover:opacity-50 transition-opacity text-xs border border-current px-3 py-1 rounded-full">Admin</a>
-        </div>
-
-        {/* Mobile Navigation Button (< 800px) */}
-        <MobileMenu smoothScroll={smoothScroll} isScrolled={scrollY > 50} />
-      </nav>
+      <Navigation isScrolled={scrollY > 50} smoothScroll={smoothScroll} />
 
       {/* Hero Section */}
       <header className="relative h-screen flex flex-col justify-center px-6 md:px-20 pt-20">
@@ -177,11 +164,11 @@ const Home = () => {
           {/* Main Title with Split Text Animation */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-light leading-[1.25] tracking-tight mb-8">
             <div className="flex flex-wrap gap-x-[0.2em] overflow-hidden">
-              <SplitText text="Inspiration" delay={0.3} />
-              <SplitText text="comes" delay={0.4} />
+              <AnimatedWord text="Inspiration" delay={0.3} />
+              <AnimatedWord text="comes" delay={0.4} />
             </div>
             <div className="flex flex-wrap gap-x-[0.2em] items-baseline" style={{ overflow: 'visible' }}>
-              <SplitText text="from" delay={0.5} />
+              <AnimatedWord text="from" delay={0.5} />
               <span className="inline-block relative" style={{ overflow: 'visible', paddingBottom: '0.1em' }}>
                 <span className="block reveal-slide-up font-serif italic bg-black text-white px-3 py-1" style={{ animationDelay: '0.6s', lineHeight: '1.2' }}>silence.</span>
               </span>
@@ -189,7 +176,7 @@ const Home = () => {
           </h1>
 
           <div className="mt-4 max-w-lg text-white text-lg md:text-xl leading-relaxed opacity-0 fade-up" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
-            <RotatingText
+            <TypewriterText
               texts={[
                 "복잡함 속에서 본질을 찾습니다.\n사용자에게 고요한 몰입의 경험을 전합니다.",
                 "Less is more.\n디자인은 보이지 않는 곳에서 완성됩니다.",
@@ -227,11 +214,11 @@ const Home = () => {
             </h2>
             <div className="text-4xl md:text-6xl font-light leading-[1.3] mb-8">
               <div className="flex flex-wrap gap-x-[0.2em] overflow-hidden">
-                <SplitText text="Less" delay={0.2} isScrollTriggered />
-                <SplitText text="noise," delay={0.3} isScrollTriggered />
+                <AnimatedWord text="Less" delay={0.2} isScrollTriggered />
+                <AnimatedWord text="noise," delay={0.3} isScrollTriggered />
               </div>
               <div className="flex flex-wrap gap-x-[0.2em] items-baseline" style={{ overflow: 'visible' }}>
-                <SplitText text="More" delay={0.4} isScrollTriggered />
+                <AnimatedWord text="More" delay={0.4} isScrollTriggered />
                 <span className="inline-block relative" style={{ overflow: 'visible', paddingBottom: '0.15em' }}>
                   <span className="block font-serif italic text-gray-400 py-1" style={{ lineHeight: '1.2' }}>voice.</span>
                 </span>
@@ -243,7 +230,7 @@ const Home = () => {
 
           </div>
           <div className="space-y-12 text-lg md:text-xl leading-relaxed text-gray-800 font-light">
-            <FadeIn>
+            <ScrollReveal>
               <p>
                 <RotatingText
                   texts={[
@@ -255,8 +242,8 @@ const Home = () => {
                   interval={8000}
                 />
               </p>
-            </FadeIn>
-            <FadeIn>
+            </ScrollReveal>
+            <ScrollReveal>
               <p>
                 <RotatingText
                   texts={[
@@ -268,24 +255,24 @@ const Home = () => {
                   interval={8500}
                 />
               </p>
-            </FadeIn>
+            </ScrollReveal>
             <div className="grid grid-cols-2 gap-8 pt-8 border-t border-gray-200">
-              <FadeIn>
+              <ScrollReveal>
                 <h3 className="text-sm font-bold uppercase mb-2">Strategy</h3>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>User Research</li>
                   <li>Brand Identity</li>
                   <li>Contents Planning</li>
                 </ul>
-              </FadeIn>
-              <FadeIn>
+              </ScrollReveal>
+              <ScrollReveal>
                 <h3 className="text-sm font-bold uppercase mb-2">Design</h3>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>UI/UX Design</li>
                   <li>Interaction</li>
                   <li>Prototyping</li>
                 </ul>
-              </FadeIn>
+              </ScrollReveal>
             </div>
           </div>
         </div>
@@ -635,11 +622,10 @@ const RotatingText = ({ texts, interval = 5000, className = "" }) => {
       {texts.map((text, index) => (
         <span
           key={index}
-          className={`col-start-1 row-start-1 transition-all duration-[800ms] ease-in-out ${
-            index === currentIndex
+          className={`col-start-1 row-start-1 transition-all duration-[800ms] ease-in-out ${index === currentIndex
               ? 'opacity-100 translate-x-0'
               : 'opacity-0 -translate-x-4 pointer-events-none'
-          }`}
+            }`}
           aria-hidden={index !== currentIndex}
         >
           {text}
@@ -648,7 +634,6 @@ const RotatingText = ({ texts, interval = 5000, className = "" }) => {
     </span>
   );
 };
-
 /**
  * Project Detail Modal Component
  * 감각적인 애니메이션과 함께 프로젝트 상세 정보를 표시
@@ -707,7 +692,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
           {/* Hero Image */}
           <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
             <img
-              src={project.image}
+              src={project.image_url || project.image}
               alt={project.title}
               className="w-full h-full object-cover"
             />
@@ -799,80 +784,5 @@ const ProjectDetailModal = ({ project, onClose }) => {
   );
 };
 
-
-// ----------------------------------------------------------------------
-// Mobile Menu Component
-// ----------------------------------------------------------------------
-
-const MobileMenu = ({ smoothScroll, isScrolled }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => setIsOpen(!isOpen);
-
-  const handleLinkClick = (e, targetId) => {
-    setIsOpen(false);
-    smoothScroll(e, targetId);
-  };
-
-  return (
-    <div className="min-[800px]:hidden">
-      <button
-        onClick={toggleMenu}
-        className={`relative z-50 text-sm font-bold uppercase tracking-widest transition-all duration-300 ${isScrolled ? 'text-black' : 'mix-blend-difference text-white'
-          } ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-      >
-        Menu
-      </button>
-
-      {/* Fullscreen Overlay */}
-      {createPortal(
-        <div
-          className={`fixed inset-0 bg-[#1a1a1a] z-[100] flex flex-col justify-center items-center transition-all duration-500 ease-in-out mix-blend-normal ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
-            }`}
-        >
-          {/* Close Button inside Portal */}
-          <button
-            onClick={toggleMenu}
-            className="absolute top-6 right-6 text-sm font-bold uppercase tracking-widest bg-black text-white px-4 py-2 rounded-full border border-white/20"
-          >
-            Close
-          </button>
-
-          <div className="flex flex-col gap-8 text-center">
-            {['Home', 'Concept', 'Work', 'Contact'].map((item, index) => {
-              const targetId = item === 'Home' ? 'body' : `#${item.toLowerCase()}`;
-              return (
-                <a
-                  key={item}
-                  href={targetId}
-                  onClick={(e) => handleLinkClick(e, targetId)}
-                  className={`text-4xl md:text-5xl font-light text-[#f4f3f0] hover:text-gray-400 transition-all duration-500 transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                    }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  {item}
-                </a>
-              );
-            })}
-
-            <a
-              href="/admin"
-              className={`text-4xl md:text-5xl font-light text-[#f4f3f0] hover:text-gray-400 transition-all duration-500 transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                }`}
-              style={{ transitionDelay: '400ms' }}
-            >
-              Admin
-            </a>
-          </div>
-
-          <div className="absolute bottom-12 text-xs text-gray-500 uppercase tracking-widest">
-            9STUDIO &copy; 2025
-          </div>
-        </div>,
-        document.body
-      )}
-    </div>
-  );
-};
 
 export default Home;
