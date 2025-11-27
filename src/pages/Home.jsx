@@ -150,7 +150,7 @@ const Home = () => {
       <header className="relative h-screen flex flex-col justify-center px-6 md:px-20 pt-20">
         <div className="max-w-4xl z-10 relative">
           <div className={`text-sm md:text-base mb-6 tracking-widest uppercase opacity-0 fade-up`} style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
-            <TypewriterText
+            <RotatingText
               texts={[
                 "Creative Developer & Designer",
                 "Crafting Digital Experiences",
