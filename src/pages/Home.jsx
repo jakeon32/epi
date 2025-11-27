@@ -183,8 +183,8 @@ const Home = () => {
             </div>
             <div className="flex flex-wrap gap-x-[0.2em] items-baseline" style={{ overflow: 'visible' }}>
               <AnimatedWord text="from" delay={0.5} />
-              <span className="inline-block relative" style={{ overflow: 'visible', paddingBottom: '0.1em' }}>
-                <span className="block reveal-slide-up font-serif italic bg-black text-white px-3 py-1" style={{ animationDelay: '0.6s', lineHeight: '1.2' }}>silence.</span>
+              <span className="inline-block relative overflow-hidden" style={{ paddingBottom: '0.1em' }}>
+                <span className="block reveal-slide-up font-serif italic bg-black text-white px-3 py-1 opacity-0" style={{ animationDelay: '0.6s', lineHeight: '1.2' }}>silence.</span>
               </span>
             </div>
           </h1>
