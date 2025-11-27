@@ -40,9 +40,17 @@ const TypewriterText = ({ texts, interval = 5000, className = "" }) => {
   }, [currentIndex, isTyping, texts, interval]);
 
   return (
-    <span className={`inline-block ${className}`}>
-      {displayText}
-      {isTyping && <span className="animate-pulse">|</span>}
+    <span className={`relative inline-block ${className}`}>
+      {/* Invisible placeholder to reserve space */}
+      <span className="opacity-0 select-none" aria-hidden="true">
+        {texts[currentIndex]}
+      </span>
+
+      {/* Absolute positioned typing text */}
+      <span className="absolute top-0 left-0 w-full h-full">
+        {displayText}
+        {isTyping && <span className="animate-pulse">|</span>}
+      </span>
     </span>
   );
 };
