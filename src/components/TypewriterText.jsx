@@ -48,13 +48,21 @@ const TypewriterText = ({ texts, interval = 5000, className = "" }) => {
   }, [currentIndex, isTyping, texts, interval]);
 
   return (
-    <span
-      className={`inline-block transition-all duration-[800ms] ease-in-out ${
-        isFadingOut ? 'opacity-0 blur-sm' : 'opacity-100 blur-0'
-      } ${className}`}
-    >
-      {displayText}
-      {isTyping && <span className="animate-pulse">|</span>}
+    <span className={`relative inline-block ${className}`}>
+      {/* Invisible placeholder to reserve space */}
+      <span className="opacity-0 select-none" aria-hidden="true">
+        {texts[currentIndex]}
+      </span>
+
+      {/* Absolute positioned typing text with blur fade-out */}
+      <span
+        className={`absolute top-0 left-0 w-full h-full transition-all duration-[800ms] ease-in-out ${
+          isFadingOut ? 'opacity-0 blur-sm' : 'opacity-100 blur-0'
+        }`}
+      >
+        {displayText}
+        {isTyping && <span className="animate-pulse">|</span>}
+      </span>
     </span>
   );
 };

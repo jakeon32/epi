@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { projectService } from '../services/projectService';
+import { profileService } from '../services/profileService';
 import { ArrowRight, Mail, Instagram, Linkedin, Sparkles, RefreshCw, Loader2, X } from 'lucide-react';
 import {
   Navigation,
@@ -21,6 +22,7 @@ import {
  * 1. Global Noise Overlay & Parallax Video Background
  * 2. Split Text Staggered Animation (단어별 시차 등장)
  * 3. Minimalist Typography (Pretendard & Noto Serif KR)
+ * 4. Dynamic Contact Info (Admin Managed)
  */
 
 // ----------------------------------------------------------------------
@@ -66,6 +68,7 @@ const Home = () => {
   const [scrollY, setScrollY] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
   const [projects, setProjects] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [loadingProjects, setLoadingProjects] = useState(true);
 
   useEffect(() => {
@@ -79,7 +82,18 @@ const Home = () => {
         setLoadingProjects(false);
       }
     };
+
+    const fetchProfile = async () => {
+      try {
+        const data = await profileService.getProfile();
+        setProfile(data);
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
     fetchProjects();
+    fetchProfile();
   }, []);
 
   // 스크롤 이벤트 리스너
@@ -381,13 +395,13 @@ const Home = () => {
           </h2>
 
           <div className="flex justify-center gap-8 mb-20">
-            <a href="#" className="p-4 border border-gray-200 rounded-full hover:bg-black hover:text-white transition-colors duration-300">
+            <a href={profile?.email ? `mailto:${profile.email}` : "#"} className="p-4 border border-gray-200 rounded-full hover:bg-black hover:text-white transition-colors duration-300">
               <Mail className="w-6 h-6" />
             </a>
-            <a href="#" className="p-4 border border-gray-200 rounded-full hover:bg-black hover:text-white transition-colors duration-300">
+            <a href={profile?.instagram_url || "#"} target="_blank" rel="noopener noreferrer" className="p-4 border border-gray-200 rounded-full hover:bg-black hover:text-white transition-colors duration-300">
               <Instagram className="w-6 h-6" />
             </a>
-            <a href="#" className="p-4 border border-gray-200 rounded-full hover:bg-black hover:text-white transition-colors duration-300">
+            <a href={profile?.linkedin_url || "#"} target="_blank" rel="noopener noreferrer" className="p-4 border border-gray-200 rounded-full hover:bg-black hover:text-white transition-colors duration-300">
               <Linkedin className="w-6 h-6" />
             </a>
           </div>
@@ -547,6 +561,7 @@ const ProjectCard = ({ title, category, image, year, onProjectClick, description
     </div>
   );
 };
+
 
 /**
  * Project Detail Modal Component
