@@ -175,7 +175,7 @@ const Home = () => {
             </div>
           </h1>
 
-          <div className="mt-4 max-w-lg text-white text-lg md:text-xl leading-relaxed opacity-0 fade-up" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
+          <div className="mt-4 max-w-lg text-white text-lg md:text-xl leading-relaxed opacity-0 fade-up h-[3.6em] md:h-[3.2em]" style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}>
             <TypewriterText
               texts={[
                 "복잡함 속에서 본질을 찾습니다.\n사용자에게 고요한 몰입의 경험을 전합니다.",
