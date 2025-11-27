@@ -72,21 +72,28 @@ const Home = () => {
   const [loadingProjects, setLoadingProjects] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProjects = async () => {
       try {
-        const [projectsData, profileData] = await Promise.all([
-          projectService.getProjects(),
-          profileService.getProfile()
-        ]);
-        setProjects(projectsData);
-        setProfile(profileData);
+        const data = await projectService.getProjects();
+        setProjects(data);
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Failed to fetch projects:", error);
       } finally {
         setLoadingProjects(false);
       }
     };
-    fetchData();
+
+    const fetchProfile = async () => {
+      try {
+        const data = await profileService.getProfile();
+        setProfile(data);
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
+    fetchProjects();
+    fetchProfile();
   }, []);
 
   // 스크롤 이벤트 리스너

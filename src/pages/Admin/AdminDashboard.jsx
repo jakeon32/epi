@@ -25,17 +25,22 @@ const AdminDashboard = () => {
     };
 
     const fetchData = async () => {
+        // Fetch Projects
         try {
-            const [projectsData, profileData] = await Promise.all([
-                projectService.getProjects(),
-                profileService.getProfile()
-            ]);
+            const projectsData = await projectService.getProjects();
             setProjects(projectsData);
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
+
+        // Fetch Profile
+        try {
+            const profileData = await profileService.getProfile();
             if (profileData) {
                 setProfile(profileData);
             }
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching profile:', error);
         } finally {
             setLoading(false);
         }
