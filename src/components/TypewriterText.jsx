@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 
 /**
  * Typewriter Text Component
- * Character-by-character typing animation with blinking cursor
+ * Character-by-character typing animation with blur fade-out effect
  * Used in Hero section for special emphasis
  */
 const TypewriterText = ({ texts, interval = 5000, className = "" }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
     const currentText = texts[currentIndex];
@@ -16,6 +17,7 @@ const TypewriterText = ({ texts, interval = 5000, className = "" }) => {
 
     // Typing animation
     if (isTyping) {
+      setIsFadingOut(false);
       setDisplayText('');
       const typingTimer = setInterval(() => {
         if (charIndex <= currentText.length) {
@@ -29,18 +31,28 @@ const TypewriterText = ({ texts, interval = 5000, className = "" }) => {
 
       return () => clearInterval(typingTimer);
     } else {
-      // Wait before showing next text
+      // Wait before fading out
       const waitTimer = setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % texts.length);
-        setIsTyping(true);
-      }, interval - (currentText.length * 50)); // Adjust wait time
+        setIsFadingOut(true);
+
+        // After fade out completes, show next text
+        setTimeout(() => {
+          setCurrentIndex((prev) => (prev + 1) % texts.length);
+          setIsTyping(true);
+        }, 800); // Match blur transition duration
+
+      }, interval - (currentText.length * 50) - 800); // Adjust wait time
 
       return () => clearTimeout(waitTimer);
     }
   }, [currentIndex, isTyping, texts, interval]);
 
   return (
-    <span className={`inline-block ${className}`}>
+    <span
+      className={`inline-block transition-all duration-[800ms] ease-in-out ${
+        isFadingOut ? 'opacity-0 blur-sm' : 'opacity-100 blur-0'
+      } ${className}`}
+    >
       {displayText}
       {isTyping && <span className="animate-pulse">|</span>}
     </span>
