@@ -1,3 +1,14 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { projectService } from '../services/projectService';
+import { ArrowRight, Mail, Instagram, Linkedin, Sparkles, RefreshCw, Loader2, X } from 'lucide-react';
+import {
+  Navigation,
+  TypewriterText,
+  RotatingText,
+  AnimatedWord,
+  ScrollReveal
+} from '../components';
+
 /**
  * Saem.space 스타일의 디자인 컨셉을 적용한 포트폴리오 (Gemini AI Edition)
  * * [새로 추가된 AI 기능]
@@ -537,92 +548,7 @@ const ProjectCard = ({ title, category, image, year, onProjectClick, description
   );
 };
 
-const SplitText = ({ text, delay = 0, isScrollTriggered = false }) => {
-  const domRef = useRef();
-  const [isVisible, setVisible] = useState(!isScrollTriggered);
 
-  useEffect(() => {
-    if (!isScrollTriggered) return;
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        setVisible(true);
-        observer.unobserve(domRef.current);
-      }
-    });
-    observer.observe(domRef.current);
-    return () => observer.disconnect();
-  }, [isScrollTriggered]);
-
-  return (
-    <div ref={domRef} className="overflow-hidden inline-block relative">
-      <span
-        className={`block transform translate-y-full ${isVisible ? 'reveal-slide-up' : ''}`}
-        style={{ animationDelay: `${delay}s` }}
-      >
-        {text}
-      </span>
-    </div>
-  );
-};
-
-const FadeIn = ({ children }) => {
-  const domRef = useRef();
-  const [isVisible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        setVisible(true);
-        observer.unobserve(domRef.current);
-      }
-    });
-    observer.observe(domRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={domRef}
-      className={`transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-        }`}
-    >
-      {children}
-    </div>
-  );
-};
-
-/**
- * Rotating Text Component
- * UI/UX 메시지가 지속적으로 변하는 애니메이션 (좌우 슬라이드)
- */
-const RotatingText = ({ texts, interval = 5000, className = "" }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % texts.length);
-    }, interval);
-
-    return () => clearInterval(timer);
-  }, [texts.length, interval]);
-
-  return (
-    <span className={`inline-grid items-center ${className}`}>
-      {texts.map((text, index) => (
-        <span
-          key={index}
-          className={`col-start-1 row-start-1 transition-all duration-[800ms] ease-in-out ${index === currentIndex
-            ? 'opacity-100 translate-x-0'
-            : 'opacity-0 -translate-x-4 pointer-events-none'
-            }`}
-          aria-hidden={index !== currentIndex}
-        >
-          {text}
-        </span>
-      ))}
-    </span>
-  );
-};
 /**
  * Project Detail Modal Component
  * 감각적인 애니메이션과 함께 프로젝트 상세 정보를 표시
