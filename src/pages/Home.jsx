@@ -1,14 +1,3 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { projectService } from '../services/projectService';
-import { ArrowRight, Mail, Instagram, Linkedin, Sparkles, RefreshCw, Loader2, X } from 'lucide-react';
-import {
-  Navigation,
-  TypewriterText,
-  RotatingText,
-  AnimatedWord,
-  ScrollReveal
-} from '../components';
-
 /**
  * Saem.space 스타일의 디자인 컨셉을 적용한 포트폴리오 (Gemini AI Edition)
  * * [새로 추가된 AI 기능]
@@ -623,8 +612,8 @@ const RotatingText = ({ texts, interval = 5000, className = "" }) => {
         <span
           key={index}
           className={`col-start-1 row-start-1 transition-all duration-[800ms] ease-in-out ${index === currentIndex
-              ? 'opacity-100 translate-x-0'
-              : 'opacity-0 -translate-x-4 pointer-events-none'
+            ? 'opacity-100 translate-x-0'
+            : 'opacity-0 -translate-x-4 pointer-events-none'
             }`}
           aria-hidden={index !== currentIndex}
         >
