@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { projectService } from '../../services/projectService';
 import { supabase } from '../../lib/supabaseClient';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Loader2, Save } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, X } from 'lucide-react';
 
 const ProjectForm = () => {
     const { id } = useParams();
@@ -20,7 +20,9 @@ const ProjectForm = () => {
         technologies: '', // Will be converted to array
         challenge: '',
         solution: '',
-        display_order: 0
+        display_order: 0,
+        is_highlight: false,
+        additional_images: [] // Array of { url, title, description }
     });
 
     useEffect(() => {
@@ -42,7 +44,9 @@ const ProjectForm = () => {
             const data = await projectService.getProject(id);
             setFormData({
                 ...data,
-                technologies: data.technologies.join(', ')
+                technologies: data.technologies.join(', '),
+                is_highlight: data.is_highlight || false,
+                additional_images: data.additional_images || []
             });
         } catch (error) {
             console.error('Error fetching project:', error);
@@ -54,8 +58,35 @@ const ProjectForm = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const handleAddImage = () => {
+        if (formData.additional_images.length >= 9) {
+            alert('Maximum 9 additional images allowed');
+            return;
+        }
+        setFormData(prev => ({
+            ...prev,
+            additional_images: [...prev.additional_images, { url: '', title: '', description: '' }]
+        }));
+    };
+
+    const handleRemoveImage = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            additional_images: prev.additional_images.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleImageChange = (index, field, value) => {
+        const newImages = [...formData.additional_images];
+        newImages[index] = { ...newImages[index], [field]: value };
+        setFormData(prev => ({ ...prev, additional_images: newImages }));
     };
 
     const handleSubmit = async (e) => {
@@ -66,7 +97,9 @@ const ProjectForm = () => {
             const projectData = {
                 ...formData,
                 technologies: formData.technologies.split(',').map(t => t.trim()).filter(t => t),
-                display_order: parseInt(formData.display_order) || 0
+                display_order: parseInt(formData.display_order) || 0,
+                is_highlight: formData.is_highlight,
+                additional_images: formData.additional_images
             };
 
             if (isEditMode) {
@@ -157,6 +190,20 @@ const ProjectForm = () => {
                             </div>
                         </div>
 
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="is_highlight"
+                                name="is_highlight"
+                                checked={formData.is_highlight}
+                                onChange={handleChange}
+                                className="w-4 h-4 text-black border-gray-300 rounded focus:ring-black"
+                            />
+                            <label htmlFor="is_highlight" className="text-sm font-medium text-gray-700 select-none cursor-pointer">
+                                Mark as Highlight Project
+                            </label>
+                        </div>
+
                         <div>
                             <label className="block text-xs font-bold uppercase tracking-widest mb-2">Image URL</label>
                             <input
@@ -173,6 +220,77 @@ const ProjectForm = () => {
                                     <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
                                 </div>
                             )}
+                        </div>
+
+                        {/* Additional Images Section */}
+                        <div className="border-t border-gray-100 pt-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <label className="block text-xs font-bold uppercase tracking-widest">
+                                    Additional Images ({formData.additional_images.length}/9)
+                                </label>
+                                <button
+                                    type="button"
+                                    onClick={handleAddImage}
+                                    disabled={formData.additional_images.length >= 9}
+                                    className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded transition-colors disabled:opacity-50"
+                                >
+                                    + Add Image
+                                </button>
+                            </div>
+
+                            <div className="space-y-6">
+                                {formData.additional_images.map((img, index) => (
+                                    <div key={index} className="bg-gray-50 p-4 rounded-sm relative group">
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveImage(index)}
+                                            className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+
+                                        <div className="grid gap-4">
+                                            <div>
+                                                <label className="block text-[10px] font-bold uppercase tracking-widest mb-1 text-gray-500">Image URL</label>
+                                                <input
+                                                    type="url"
+                                                    value={img.url}
+                                                    onChange={(e) => handleImageChange(index, 'url', e.target.value)}
+                                                    className="w-full p-2 border border-gray-200 text-sm focus:border-black outline-none"
+                                                    placeholder="https://..."
+                                                />
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-[10px] font-bold uppercase tracking-widest mb-1 text-gray-500">Title</label>
+                                                    <input
+                                                        type="text"
+                                                        value={img.title}
+                                                        onChange={(e) => handleImageChange(index, 'title', e.target.value)}
+                                                        className="w-full p-2 border border-gray-200 text-sm focus:border-black outline-none"
+                                                        placeholder="Image Title"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[10px] font-bold uppercase tracking-widest mb-1 text-gray-500">Description</label>
+                                                    <input
+                                                        type="text"
+                                                        value={img.description}
+                                                        onChange={(e) => handleImageChange(index, 'description', e.target.value)}
+                                                        className="w-full p-2 border border-gray-200 text-sm focus:border-black outline-none"
+                                                        placeholder="Short description"
+                                                    />
+                                                </div>
+                                            </div>
+                                            {img.url && (
+                                                <div className="h-24 w-full bg-gray-200 rounded-sm overflow-hidden">
+                                                    <img src={img.url} alt="Preview" className="w-full h-full object-cover" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
                         <div>

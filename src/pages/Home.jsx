@@ -344,6 +344,7 @@ const Home = () => {
                 technologies={project.technologies}
                 challenge={project.challenge}
                 solution={project.solution}
+                additional_images={project.additional_images}
               />
             ))
           ) : (
@@ -417,7 +418,9 @@ const Home = () => {
       {selectedProject && (
         <ProjectDetailModal
           project={selectedProject}
+          highlightedProjects={projects.filter(p => p.is_highlight)}
           onClose={() => setSelectedProject(null)}
+          onProjectClick={setSelectedProject}
         />
       )}
 
@@ -483,13 +486,13 @@ const MuseSection = () => {
  * AI Feature 2: Project Card with Storyteller
  * Gemini가 프로젝트의 배경 스토리를 생성해줌
  */
-const ProjectCard = ({ title, category, image, year, onProjectClick, description, technologies, challenge, solution }) => {
+const ProjectCard = ({ title, category, image, year, onProjectClick, description, technologies, challenge, solution, additional_images }) => {
   const [showStory, setShowStory] = useState(false);
   const [story, setStory] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleCardClick = () => {
-    onProjectClick({ title, category, image, year, description, technologies, challenge, solution });
+    onProjectClick({ title, category, image, year, description, technologies, challenge, solution, additional_images });
   };
 
   const handleStoryToggle = async (e) => {
@@ -567,7 +570,7 @@ const ProjectCard = ({ title, category, image, year, onProjectClick, description
  * Project Detail Modal Component
  * 감각적인 애니메이션과 함께 프로젝트 상세 정보를 표시
  */
-const ProjectDetailModal = ({ project, onClose }) => {
+const ProjectDetailModal = ({ project, highlightedProjects = [], onClose, onProjectClick }) => {
   const [isVisible, setIsVisible] = useState(false);
   const modalRef = useRef(null);
 
@@ -691,21 +694,43 @@ const ProjectDetailModal = ({ project, onClose }) => {
               </div>
             </div>
 
-            {/* Placeholder for more content */}
-            <div className="border-t border-gray-200 pt-8">
-              <h3 className="text-xs font-bold uppercase tracking-widest mb-6">Project Highlights</h3>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="aspect-video bg-gray-200 rounded-sm flex items-center justify-center">
-                  <span className="text-gray-400 text-sm">Image</span>
-                </div>
-                <div className="aspect-video bg-gray-200 rounded-sm flex items-center justify-center">
-                  <span className="text-gray-400 text-sm">Image</span>
-                </div>
-                <div className="aspect-video bg-gray-200 rounded-sm flex items-center justify-center">
-                  <span className="text-gray-400 text-sm">Image</span>
+            {/* Project Highlights */}
+            {/* Project Highlights */}
+            {highlightedProjects.length > 0 && (
+              <div className="border-t border-gray-200 pt-8">
+                <h3 className="text-xs font-bold uppercase tracking-widest mb-6">Project Highlights</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {highlightedProjects
+                    .filter(p => p.id !== project.id)
+                    .map((item) => (
+                      <div
+                        key={item.id}
+                        className="space-y-4 cursor-pointer group"
+                        onClick={() => {
+                          // Close current modal animation first if needed, or just switch content
+                          // For smoother transition, we might just switch the data
+                          onProjectClick(item);
+                          // Scroll to top of modal content
+                          const modalContent = document.querySelector('.custom-scrollbar');
+                          if (modalContent) modalContent.scrollTop = 0;
+                        }}
+                      >
+                        <div className="w-full bg-gray-100 rounded-sm overflow-hidden aspect-[4/3]">
+                          <img
+                            src={item.image_url}
+                            alt={item.title}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="max-w-2xl">
+                          <h4 className="text-lg font-serif italic mb-1 group-hover:text-purple-600 transition-colors">{item.title}</h4>
+                          <p className="text-xs uppercase tracking-widest text-gray-500">{item.category}</p>
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
