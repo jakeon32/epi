@@ -180,6 +180,7 @@ const AdminDashboard = () => {
                                 <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500">Title</th>
                                 <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500">Category</th>
                                 <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500">Year</th>
+                                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500 text-center">Highlight</th>
                                 <th className="p-4 text-xs font-bold uppercase tracking-widest text-gray-500 text-right">Actions</th>
                             </tr>
                         </thead>
@@ -192,6 +193,13 @@ const AdminDashboard = () => {
                                     <td className="p-4 font-medium">{project.title}</td>
                                     <td className="p-4 text-gray-500">{project.category}</td>
                                     <td className="p-4 text-gray-500">{project.year}</td>
+                                    <td className="p-4 text-center">
+                                        {project.is_highlight ? (
+                                            <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                                        ) : (
+                                            <span className="inline-block w-2 h-2 bg-gray-200 rounded-full"></span>
+                                        )}
+                                    </td>
                                     <td className="p-4 text-right">
                                         <div className="flex justify-end gap-2">
                                             <Link
