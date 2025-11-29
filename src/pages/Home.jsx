@@ -127,16 +127,45 @@ const Home = () => {
 
   // 비디오 자동재생 강제 (모바일 대응)
   useEffect(() => {
-    if (videoRef.current) {
-      const playVideo = async () => {
-        try {
-          await videoRef.current.play();
-        } catch (error) {
-          console.log('Video autoplay failed:', error);
-        }
-      };
+    const video = videoRef.current;
+    if (!video) return;
+
+    const playVideo = async () => {
+      try {
+        video.muted = true; // 확실하게 음소거
+        await video.play();
+      } catch (error) {
+        console.log('Video autoplay failed, will retry on user interaction:', error);
+      }
+    };
+
+    // 즉시 재생 시도
+    playVideo();
+
+    // 비디오 로드 완료 시 재생
+    video.addEventListener('loadeddata', playVideo);
+    video.addEventListener('canplay', playVideo);
+
+    // 사용자 인터랙션 시 재생 (터치, 스크롤)
+    const handleInteraction = () => {
       playVideo();
-    }
+      // 한 번만 실행하도록 이벤트 제거
+      document.removeEventListener('touchstart', handleInteraction);
+      document.removeEventListener('scroll', handleInteraction);
+      document.removeEventListener('click', handleInteraction);
+    };
+
+    document.addEventListener('touchstart', handleInteraction, { once: true, passive: true });
+    document.addEventListener('scroll', handleInteraction, { once: true, passive: true });
+    document.addEventListener('click', handleInteraction, { once: true });
+
+    return () => {
+      video.removeEventListener('loadeddata', playVideo);
+      video.removeEventListener('canplay', playVideo);
+      document.removeEventListener('touchstart', handleInteraction);
+      document.removeEventListener('scroll', handleInteraction);
+      document.removeEventListener('click', handleInteraction);
+    };
   }, []);
 
   // Custom Physics-based Smooth Scroll
@@ -235,9 +264,14 @@ const Home = () => {
             loop
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
+            webkit-playsinline="true"
+            x5-playsinline="true"
+            x5-video-player-type="h5"
+            x5-video-player-fullscreen="false"
             className="w-full h-full object-cover contrast-125 opacity-25"
             style={{ pointerEvents: 'none' }}
+            defaultMuted
           >
             <source src="https://videos.pexels.com/video-files/5091624/5091624-hd_1920_1080_24fps.mp4" type="video/mp4" />
             Your browser does not support the video tag.
