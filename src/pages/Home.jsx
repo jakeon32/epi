@@ -70,6 +70,7 @@ const Home = () => {
   const [projects, setProjects] = useState([]);
   const [profile, setProfile] = useState(null);
   const [loadingProjects, setLoadingProjects] = useState(true);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -123,6 +124,20 @@ const Home = () => {
       document.body.style.overflow = 'auto';
     };
   }, [selectedProject]);
+
+  // 비디오 자동재생 강제 (모바일 대응)
+  useEffect(() => {
+    if (videoRef.current) {
+      const playVideo = async () => {
+        try {
+          await videoRef.current.play();
+        } catch (error) {
+          console.log('Video autoplay failed:', error);
+        }
+      };
+      playVideo();
+    }
+  }, []);
 
   // Custom Physics-based Smooth Scroll
   const smoothScroll = (e, targetId) => {
@@ -215,13 +230,17 @@ const Home = () => {
         {/* Hero Background Video (Full Screen) */}
         <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             className="w-full h-full object-cover contrast-125 opacity-25"
+            style={{ pointerEvents: 'none' }}
           >
             <source src="https://videos.pexels.com/video-files/5091624/5091624-hd_1920_1080_24fps.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
           </video>
           {/* Overlay for text readability */}
           <div className="absolute inset-0 bg-black/10"></div>
