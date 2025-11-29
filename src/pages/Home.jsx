@@ -96,10 +96,19 @@ const Home = () => {
     fetchProfile();
   }, []);
 
-  // 스크롤 이벤트 리스너
+  // 스크롤 이벤트 리스너 (throttled for performance)
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -521,7 +530,8 @@ const ProjectCard = ({ title, category, image, year, onProjectClick, description
       <img
         src={image}
         alt={title}
-        className={`w-full h-full object-cover transition-all duration-700 ease-out 
+        loading="lazy"
+        className={`w-full h-full object-cover transition-all duration-700 ease-out
           ${showStory ? 'opacity-20 grayscale-0 scale-105' : 'opacity-60 grayscale group-hover:opacity-40 group-hover:scale-105 group-hover:grayscale-0'}`}
       />
 
@@ -626,6 +636,7 @@ const ProjectDetailModal = ({ project, highlightedProjects = [], onClose, onProj
             <img
               src={project.image_url || project.image}
               alt={project.title}
+              loading="lazy"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#f4f3f0] via-transparent to-transparent"></div>
@@ -719,6 +730,7 @@ const ProjectDetailModal = ({ project, highlightedProjects = [], onClose, onProj
                           <img
                             src={item.image_url}
                             alt={item.title}
+                            loading="lazy"
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         </div>

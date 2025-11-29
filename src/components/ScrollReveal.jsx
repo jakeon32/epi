@@ -35,4 +35,4 @@ const ScrollReveal = ({ children }) => {
   );
 };
 
-export default ScrollReveal;
+export default React.memo(ScrollReveal);

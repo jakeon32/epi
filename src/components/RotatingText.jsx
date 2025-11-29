@@ -34,4 +34,4 @@ const RotatingText = ({ texts, interval = 5000, className = "" }) => {
   );
 };
 
-export default RotatingText;
+export default React.memo(RotatingText);

@@ -67,4 +67,4 @@ const TypewriterText = ({ texts, interval = 5000, className = "" }) => {
   );
 };
 
-export default TypewriterText;
+export default React.memo(TypewriterText);

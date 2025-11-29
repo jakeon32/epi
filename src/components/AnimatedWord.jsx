@@ -37,4 +37,4 @@ const AnimatedWord = ({ text, delay = 0, isScrollTriggered = false }) => {
   );
 };
 
-export default AnimatedWord;
+export default React.memo(AnimatedWord);
